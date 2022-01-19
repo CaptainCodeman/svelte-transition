@@ -6,6 +6,9 @@
 
   // interface for context
   interface Context {
+    // appear setting
+    appear: boolean
+
     // store provides observable state to child transitions
     show: Readable<boolean>
 
@@ -63,10 +66,6 @@
   $: leaveFromClasses = classes(leaveFrom === null ? enterTo : leaveFrom)
   $: leaveToClasses = classes(leaveTo === null ? enterFrom : leaveTo)
 
-  // initial state
-  let initial = show && !appear
-  let mounted = !unmount || show === true
-
   // get parent context if we're a child
   const parent = show === null ? getContext<Context>(key) : null
 
@@ -74,10 +73,15 @@
   // we keep the writable part (using set) and give a readable store to them
   const { subscribe, set } = writable(show)
   const context: Context = {
+    appear: parent ? parent.appear : appear,
     count: 0,
     show: { subscribe },
     completed: () => {},
   }
+
+  // initial state
+  let initial = show && !context.appear
+  let mounted = !unmount || show === true
 
   // set context for children to use
   setContext(key, context)
@@ -196,7 +200,7 @@
 
     // execute is always called, even for the initial render, so we use a flag
     // to prevent a transition running unless appear is set for animating in
-    let run = appear
+    let run = context.appear
 
     async function execute(show: boolean) {
       // TODO: handle state changing while previous transition is still in progress

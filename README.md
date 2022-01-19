@@ -47,15 +47,23 @@ If the leave transition is the opposite of the enter transition it can be omitte
 >
 ```
 
-NOTE: `leave` = `enter`, `leaveFrom` = `enterTo`, and `leaveTo` = `enterFrom` unless you override them.
+i.e. `leave` will equal `enter`, `leaveFrom` will equal `enterTo`, and `leaveTo` will equal `enterFrom` unless you override them.
 
 ## Appear
 
 Set `appear` to have the transition play on initial mount.
 
+Default `false`.
+
+## Unmount
+
+Set `unmount` to have the transitioned element removed from the DOM when not shown (instead of just hidden).
+
+Default `false`.
+
 ## Co-ordinating Transitions
 
-If the `show` property is ommitted then the transition is treated as a child and will receive it's state from it's parent. The parent will automatically wait for it's children to finish transitioning before they are unmounted, so the animations can complete.
+If the `show` property is ommitted then the transition is treated as a child and will receive it's state from it's parent. The parent will automatically wait for it's children to finish transitioning before they are unmounted or hidden, so the animations can complete.
 
 ## Events
 

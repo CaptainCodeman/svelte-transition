@@ -12,10 +12,10 @@
 <div class="p-16 relative flex flex-col items-center justify-center m-8 rounded-xl overflow-hidden bg-gradient-to-r from-pink-500 to-rose-500">
   <div class="w-32 h-32">
     <Transition {show} appear
-      enter="transform transition duration-[400ms]"
+      enter="duration-[400ms]"
       enterFrom="opacity-0 rotate-[-120deg] scale-50"
       enterTo="opacity-100 rotate-0 scale-100"
-      leave="transform duration-200 transition ease-in-out"
+      leave="duration-200 transition ease-in-out"
       leaveFrom="opacity-100 rotate-0 scale-100"
       leaveTo="opacity-0 scale-95"
     >

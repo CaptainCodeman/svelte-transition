@@ -1,5 +1,5 @@
 <script lang="ts" context="module">
-  import type { Writable } from 'svelte/store'
+  import type { Readable } from 'svelte/store'
 
   // unique key for context
   const key = {}
@@ -7,13 +7,13 @@
   // interface for context
   interface Context {
     // store provides observable state to child transitions
-    show: Writable<boolean>
+    show: Readable<boolean>
 
     // number of child transitions that need to be waited before completed
     count: number
 
     // method to communicate child transition completion
-    completed: () => Promise<void>
+    completed: () => void
   }
 
   // convert a string of class names into an array, for use with DOM methods
@@ -29,40 +29,28 @@
 </script>
 
 <script lang="ts">
-  import { getContext, setContext, createEventDispatcher } from 'svelte'
+  import { getContext, setContext, createEventDispatcher, tick } from 'svelte'
   import { writable } from 'svelte/store'
 
-  // state of element (shown or hidden), or null if this is a child
+  // state of element (shown or hidden), if null this we are treated as a child
+  // transition and will get the state from our parent, coordinating with it
   export let show: boolean = null
 
-  // apply transition when element first appears
+  // apply transition when element is first rendered (i.e. animate in)
   export let appear: boolean = false
 
-  // TODO: to handle this, we'll need to re-reference the wrapped element
-  // _after_ it has been added back to the DOM (and hidden), really like
-  // running the initialization again each time
-
-  // whether the element should be unmounted (vs hidden)
+  // whether the element should be removed from the DOM (vs hidden)
   export let unmount: boolean = false
 
-  // transition classes when entering (showing)
+  // classes to apply when entering (showing)
   export let enter: string = ''
   export let enterFrom: string = ''
   export let enterTo: string = ''
 
-  // transition classes when leaving (hiding)
+  // classes toi apply when leaving (hiding)
   export let leave: string = null
   export let leaveFrom: string = null
   export let leaveTo: string = null
-
-  // if show isn't defined then this transition is a child and will receive
-  // it's show state from, and coordinate it's transition completion with,
-  // it's parent transition
-  // let child = show === null
-
-  // this allows us to control initial render - if we want to transition in
-  // the html needs start hidden otherwise it will flash before re-appearing
-  let render = show && !appear
 
   // convert class strings to arrays, for easier use with DOM elements
   $: enterClasses = classes(enter)
@@ -75,14 +63,20 @@
   $: leaveFromClasses = classes(leaveFrom === null ? enterTo : leaveFrom)
   $: leaveToClasses = classes(leaveTo === null ? enterFrom : leaveTo)
 
+  // initial state
+  let initial = show && !appear
+  let mounted = !unmount || show
+
   // get parent context if we're a child
   const parent = show === null ? getContext<Context>(key) : null
 
-    // create our own context
+  // create our own context (which will also become parent for any children)
+  // we keep the writable part (using set) and give a readable store to them
+  const { subscribe, set } = writable(show)
   const context: Context = {
     count: 0,
-    show: writable(show),
-    completed: () => Promise.resolve(),
+    show: { subscribe },
+    completed: () => {},
   }
 
   // set context for children to use
@@ -92,20 +86,16 @@
 
   // use action that hooks into our wrapper div and manages everything
   function transition(node: HTMLDivElement, show: boolean) {
-    // TODO: this check may be invalid if unmount is set
-    // if (node.childElementCount !== 1 || node.firstElementChild.nodeType !== Node.ELEMENT_NODE) {
-    //   console.warn('<Transition> must be applied to a single HTML element')
-    // }
-
     // the child element that we will be applying classes to
-    let el: HTMLElement = node.firstElementChild as HTMLElement
+    // let el: HTMLElement = node.firstElementChild as HTMLElement
 
-    function addClasses(val: string[]) {
-      el.classList.add(...val)
+    let el: HTMLElement
+    function addClasses(classes: string[]) {
+      el.classList.add(...classes)
     }
 
-    function removeClasses(val: string[]) {
-      el.classList.remove(...val)
+    function removeClasses(classes: string[]) {
+      el.classList.remove(...classes)
     }
 
     function transitionEnd(transitions: string[]) {
@@ -118,53 +108,74 @@
         : Promise.resolve()
     }
 
-    function childrenCompleted () {
+    function childrenCompleted(parentCompleted: Promise<void>) {
       // return a promise that all children have completed (resolve immediately if no children)
       // sets the context completed method that children call to a promise that the parent has completed
       return context.count
         ? new Promise<void>(resolve => {
             let count = 0
-            context.completed = () => new Promise<void>(resolve => {
+            context.completed = () => {
               if (++count === context.count) {
                 resolve()
               }
-            }).then(resolve)
+              return parentCompleted
+            }
           })
         : Promise.resolve()
     }
 
-    async function apply(base: string[], from: string[], to: string[]) {
-      const completed = childrenCompleted()
+    async function apply(show: boolean, base: string[], from: string[], to: string[]) {
+      el = await ensureMountedElement()
+
+      let resolveCompleted: Function
+      const completed = new Promise<void>(resolve => {
+        resolveCompleted = resolve
+      })
+
+      const children = childrenCompleted(completed)
+
+      // set state for any child transitions
+      set(show)
 
       addClasses(base)
       addClasses(from)
 
-      await nextFrame()
-
       const transitioned = transitionEnd(base)
+
+      await nextFrame()
 
       removeClasses(from)
       addClasses(to)
 
-      await transitioned
-
-      removeClasses(base)
-      removeClasses(to)
-
-      await completed
-    }
-
-    async function enter() {
-      el.style.display = ''
-      el.style.visibility = ''
-
-      dispatch('before-enter')
-
-      await apply(enterClasses, enterFromClasses, enterToClasses)
+      await Promise.all([
+        transitioned,
+        children,
+      ])
 
       if (parent) {
         await parent.completed()
       }
+
+      removeClasses(base)
+      removeClasses(to)
+
+      resolveCompleted()
+    }
+
+    async function ensureMountedElement() {
+      if (unmount && mounted === false) {
+        mounted = true
+        await tick() // give slot chance to render
+      }
+      return node.firstElementChild as HTMLElement
+    }
+
+    async function enter() {
+      dispatch('before-enter')
+
+      node.classList.toggle('show', true)
+
+      await apply(true, enterClasses, enterFromClasses, enterToClasses)
 
       dispatch('after-enter')
     }
@@ -172,50 +183,36 @@
     async function leave() {
       dispatch('before-leave')
 
-      await apply(leaveClasses, leaveFromClasses, leaveToClasses)
+      await apply(false, leaveClasses, leaveFromClasses, leaveToClasses)
 
-      el.style.visibility = 'hidden'
+      node.classList.toggle('show', false)
 
-      if (parent) {
-        await parent.completed()
+      if (unmount) {
+        mounted = false
       }
-
-      el.style.display = 'none'
 
       dispatch('after-leave')
     }
 
-    let initialized = false
+    // execute is always called, even for the initial render, so we use a flag
+    // to prevent a transition running unless appear is set for animating in
+    let run = appear
 
     async function execute(show: boolean) {
-      // TODO: handle unmount - re-reference node.firstElementChild & set appropriate initial state
-      if (unmount) {}
+      // TODO: handle state changing while previous transition is still in progress
+      // option is to complete immediately before playing new one, or to wait for it
+      // to complete before switching
 
-      // set initial state (fixed)
-      if (!initialized) {
-        render = true
-        el.style.display = show
-          ? appear ? 'none' : ''
-          : appear ? '' : 'none'
+      if (run) {
+        // run appropriate transition
+        show ? enter() : leave()
       }
 
-      // if previously initialized or animating in (appear)
-      if (initialized || appear) {
-        if (show) {
-          enter()
-        } else {
-          leave()
-        }
-      }
-
-      // set state for any child transitions
-      context.show.set(show)
-
-      // avoid re-initializing on subsequent changes
-      initialized = true
+      // play transitions on all subsequent calls ...
+      run = true
     }
 
-    // to unsubscribe when component destroyed
+    // to unsubscribe from parent when we're destroyed (if we're a child)
     let unsubscribe: Function
 
     // if we're a child transition, increment the count on the parent and listen for state notifications
@@ -230,10 +227,6 @@
 
     return {
       update(show: boolean) {
-        // if (parent) {
-        //   throw '<Transition> child cannot be updated directly'
-        // }
-
         // top-level updates happen here, as show property is updated, which triggers the transition
         execute(show)
       },
@@ -248,12 +241,12 @@
   }
 </script>
 
-<div class:render use:transition={show}>{#if show || !unmount}<slot />{/if}</div>
+<div class:show={initial} use:transition={show}>{#if mounted}<slot />{/if}</div>
 
 <style>
-  /* default to not rendering, so content is hidden (to prevent flash of content before we can hide it) */
+  /* default to *not* rendering, so content is initially hidden (to prevent flash of content before we can hide it if appear is set) */
   div { display: none; }
 
-  /* once rendering is active then showing and hiding is controlled on child element and we don't add our own CSS box */
-  .render { display: contents; }
+  /* when showing the component, we don't want to add anything to the box model, it's like we we're not even there ... */
+  .show { display: contents; }
 </style>

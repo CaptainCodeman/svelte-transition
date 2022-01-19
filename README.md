@@ -4,6 +4,8 @@ Svelte component to make using CSS class based transitions easier - ideally suit
 
 Loosely modeled on the [HeadlessUI Transition](https://headlessui.dev/react/transition).
 
+About 3Kb / 1.5Kb gzipped
+
 ## Installation
 
 Install using your package manager of choice:

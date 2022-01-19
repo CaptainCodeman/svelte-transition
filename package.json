@@ -1,6 +1,25 @@
 {
   "name": "svelte-transition",
-  "version": "0.0.2",
+  "description": "Svelte component to transition elements via CSS classes",
+  "version": "0.0.3",
+  "type": "module",
+  "keywords": [
+    "svelte",
+    "component",
+    "transition",
+    "animation",
+    "tailwindcss",
+    "tailwindui"
+  ],
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/captaincodeman/svelte-transition.git"
+  },
+  "author": {
+    "name" : "Simon Green",
+    "email" : "simon@captaincodeman.com",
+    "url" : "https://www.captaincodeman.com/"
+  },
   "scripts": {
     "dev": "svelte-kit dev",
     "build": "svelte-kit build",
@@ -21,6 +40,5 @@
     "postcss": "^8.4.5",
     "autoprefixer": "^10.4.2",
     "tailwindcss": "^3.0.12"
-  },
-  "type": "module"
+  }
 }

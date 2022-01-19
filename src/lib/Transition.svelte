@@ -65,7 +65,7 @@
 
   // initial state
   let initial = show && !appear
-  let mounted = !unmount || show
+  let mounted = !unmount || show === true
 
   // get parent context if we're a child
   const parent = show === null ? getContext<Context>(key) : null
@@ -127,7 +127,7 @@
     async function apply(show: boolean, base: string[], from: string[], to: string[]) {
       el = await ensureMountedElement()
 
-      let resolveCompleted: Function
+      let resolveCompleted = (_?) => {}
       const completed = new Promise<void>(resolve => {
         resolveCompleted = resolve
       })
@@ -163,7 +163,7 @@
     }
 
     async function ensureMountedElement() {
-      if (unmount && mounted === false) {
+      if (unmount && !mounted) {
         mounted = true
         await tick() // give slot chance to render
       }

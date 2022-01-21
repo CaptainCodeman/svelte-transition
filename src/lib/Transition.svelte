@@ -89,7 +89,7 @@
   const dispatch = createEventDispatcher()
 
   // use action that hooks into our wrapper div and manages everything
-  function transition(node: HTMLDivElement, show: boolean) {
+  function transition(node: HTMLElement, show: boolean) {
     // the child element that we will be applying classes to
     // let el: HTMLElement = node.firstElementChild as HTMLElement
 

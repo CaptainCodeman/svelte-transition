@@ -80,7 +80,7 @@
   }
 
   // initial state
-  let initial = show && !context.appear
+  let display = show && !context.appear ? 'contents' : 'none'
   let mounted = !unmount || show === true
 
   // set context for children to use
@@ -177,7 +177,7 @@
     async function enter() {
       dispatch('before-enter')
 
-      node.classList.toggle('show', true)
+      display = 'contents'
 
       await apply(true, enterClasses, enterFromClasses, enterToClasses)
 
@@ -189,7 +189,7 @@
 
       await apply(false, leaveClasses, leaveFromClasses, leaveToClasses)
 
-      node.classList.toggle('show', false)
+      display = 'none'
 
       if (unmount) {
         mounted = false
@@ -245,12 +245,4 @@
   }
 </script>
 
-<div class:show={initial} use:transition={show}>{#if mounted}<slot />{/if}</div>
-
-<style>
-  /* default to *not* rendering, so content is initially hidden (to prevent flash of content before we can hide it if appear is set) */
-  div { display: none; }
-
-  /* when showing the component, we don't want to add anything to the box model, it's like we we're not even there ... */
-  .show { display: contents; }
-</style>
+<div style:display use:transition={show}>{#if mounted}<slot />{/if}</div>

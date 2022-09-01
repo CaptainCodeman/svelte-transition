@@ -72,6 +72,7 @@
 	// create our own context (which will also become parent for any children)
 	// we keep the writable part (using set) and give a readable store to them
 	const { subscribe, set } = writable(show)
+
 	const context: Context = {
 		appear: parent ? parent.appear : appear,
 		count: 0,
@@ -200,11 +201,12 @@
 		let run = context.appear
 
 		function execute(show: boolean | null) {
-			executing = Promise.resolve()
-			if (run) {
-				// run appropriate transition
-				executing = show ? enter() : leave()
-			}
+			// run appropriate transition, set promise for completion
+			executing = run
+				? show
+					? enter()
+					: leave()
+				: Promise.resolve()
 
 			// play transitions on all subsequent calls ...
 			run = true
@@ -220,7 +222,7 @@
 		if (parent) {
 			parent.count++
 			// child updates happen here, as show propery is updated by the parent, which triggers the transition
-			unsubscribe = parent.show.subscribe(show => execute(show))
+			unsubscribe = parent.show.subscribe(execute)
 		} else {
 			// otherwise, first run through to set initial state (and possibly, 'appear' transition)
 			execute(show)

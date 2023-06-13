@@ -1,8 +1,14 @@
 {
   "name": "svelte-transition",
   "description": "Svelte component to transition elements via CSS classes",
-  "version": "0.0.7",
+  "version": "0.0.8",
   "type": "module",
+  "exports": {
+    ".": {
+      "types": "./dist/index.d.ts",
+      "svelte": "./dist/index.js"
+    }
+  },
   "keywords": [
     "svelte",
     "component",
@@ -20,29 +26,28 @@
     "email": "simon@captaincodeman.com",
     "url": "https://www.captaincodeman.com/"
   },
-  "license": "MIT",
   "scripts": {
     "dev": "vite dev",
     "build": "vite build",
-    "preview": "svite preview",
+    "preview": "vite preview",
     "package": "svelte-package",
     "check": "svelte-check --tsconfig ./tsconfig.json",
     "check:watch": "svelte-check --tsconfig ./tsconfig.json --watch"
   },
   "devDependencies": {
-    "@sveltejs/adapter-auto": "1.0.0",
-    "@sveltejs/kit": "1.0.0",
-    "@sveltejs/package": "1.0.0",
-    "autoprefixer": "^10.4.13",
-    "postcss": "^8.4.20",
-    "svelte": "^3.55.0",
-    "svelte-check": "^2.10.2",
-    "svelte-preprocess": "^5.0.0",
-    "svelte2tsx": "^0.5.22",
-    "tailwindcss": "^3.2.4",
-    "tslib": "^2.4.1",
-    "typescript": "^4.9.4",
-    "vite": "^4.0.1"
+    "@sveltejs/adapter-auto": "^2.1.0",
+    "@sveltejs/kit": "^1.20.2",
+    "@sveltejs/package": "^2.0.2",
+    "autoprefixer": "^10.4.14",
+    "postcss": "^8.4.24",
+    "svelte": "^3.59.1",
+    "svelte-check": "^3.4.3",
+    "tailwindcss": "^3.3.2",
+    "tslib": "^2.5.3",
+    "typescript": "^5.1.3",
+    "vite": "^4.3.9"
   },
-  "dependencies": {}
+  "peerDependencies": {
+    "svelte": "^3.59.1 || ^4.0.0"
+  }
 }

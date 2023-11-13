@@ -72,3 +72,7 @@ The component raises events to indicate when any transition is running:
 - `after-enter` runs after the enter transition happens
 - `before-leave` runs before the leave transition happens
 - `after-leave` runs after the leave transition happens
+
+## TailwindUI
+
+If you're converting from TailwindUI markup, you can use this [handy converter](https://quick-898.github.io/svelte-transition-converter/) to convert the comments into `<Transition>` markup and classes.

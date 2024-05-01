@@ -80,9 +80,13 @@
 		completed: () => {},
 	}
 
-	// initial state
-	$: display = show && !context.appear ? 'contents' : 'none'
-	$: mounted = !unmount || show === true
+	// set initial state
+	// slight convoluted to work around a Svelte 5 issue: https://github.com/sveltejs/svelte/issues/11417
+	let _display = show && !context.appear ? 'contents' : 'none'
+	let _mounted = !unmount || show === true
+
+	$: display = _display
+	$: mounted = _mounted
 
 	// set context for children to use
 	setContext(key, context)
@@ -92,9 +96,9 @@
 	// use action that hooks into our wrapper div and manages everything
 	function transition(node: HTMLElement, show: boolean | null) {
 		// the child element that we will be applying classes to
-		// let el: HTMLElement = node.firstElementChild as HTMLElement
-
+		// set later once the component has mounted
 		let el: HTMLElement
+
 		function addClasses(...classes: string[]) {
 			el.classList.add(...classes)
 		}

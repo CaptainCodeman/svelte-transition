@@ -1,7 +1,7 @@
 {
 	"name": "svelte-transition",
 	"description": "Svelte component to transition elements via CSS classes",
-	"version": "0.0.12",
+	"version": "0.0.13",
 	"type": "module",
 	"module": "./dist/index.js",
 	"svelte": "./dist/index.js",

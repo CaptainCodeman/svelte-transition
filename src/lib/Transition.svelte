@@ -81,8 +81,8 @@
 	}
 
 	// initial state
-	let display = show && !context.appear ? 'contents' : 'none'
-	let mounted = !unmount || show === true
+	$: display = show && !context.appear ? 'contents' : 'none'
+	$: mounted = !unmount || show === true
 
 	// set context for children to use
 	setContext(key, context)

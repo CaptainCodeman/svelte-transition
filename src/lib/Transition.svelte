@@ -80,16 +80,16 @@
 		completed: () => {},
 	}
 
-	// set initial state
-	// slight convoluted to work around a Svelte 5 issue: https://github.com/sveltejs/svelte/issues/11417
-	let _display = show && !context.appear ? 'contents' : 'none'
-	let _mounted = !unmount || show === true
-
-	$: display = _display
-	$: mounted = _mounted
-
 	// set context for children to use
 	setContext(key, context)
+
+	// set initial state
+	let display = show && !context.appear ? 'contents' : 'none'
+	let mounted = !unmount || show === true
+
+	// to work around a Svelte 5 issue: https://github.com/sveltejs/svelte/issues/11417
+	$: display = display
+	$: mounted = mounted
 
 	const dispatch = createEventDispatcher()
 

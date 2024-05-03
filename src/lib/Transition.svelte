@@ -87,10 +87,6 @@
 	let display = show && !context.appear ? 'contents' : 'none'
 	let mounted = !unmount || show === true
 
-	// to work around a Svelte 5 issue: https://github.com/sveltejs/svelte/issues/11417
-	$: display = display
-	$: mounted = mounted
-
 	const dispatch = createEventDispatcher()
 
 	// use action that hooks into our wrapper div and manages everything

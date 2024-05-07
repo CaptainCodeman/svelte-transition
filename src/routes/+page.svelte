@@ -21,7 +21,7 @@
 			leaveFrom="opacity-100 rotate-0 scale-100"
 			leaveTo="opacity-0 scale-95"
 		>
-			<div class="w-full h-full bg-white rounded-md shadow-lg" />
+			<div class="w-full h-full bg-white rounded-md shadow-lg"></div>
 		</Transition>
 	</div>
 	<button

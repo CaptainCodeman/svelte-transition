@@ -200,12 +200,22 @@
 		// to prevent a transition running unless appear is set for animating in
 		let run = context.appear
 
+		// temp fix for Svelte 5 issue #11448
+		let showPrev: boolean | null
+
 		function execute(show: boolean | null) {
+			// temp fix for Svelte 5 issue #11448 triggering animations when prop hasn't changed
+			if (show === showPrev) {
+				return
+			}
+
+			showPrev = show
+
 			// run appropriate transition, set promise for completion
 			executing = run
 				? show
-					? enter()
-					: leave()
+					? executing.then(enter)
+					: executing.then(leave)
 				: Promise.resolve()
 
 			// play transitions on all subsequent calls ...
@@ -216,7 +226,7 @@
 		let unsubscribe: Function
 
 		// to wait for in-progress transitions to complete
-		let executing: Promise<void>
+		let executing = Promise.resolve()
 
 		// if we're a child transition, increment the count on the parent and listen for state notifications
 		if (parent) {
@@ -231,8 +241,7 @@
 		return {
 			update(show: boolean | null) {
 				// top-level updates happen here, as show property is updated, which triggers the transition
-				// wait for current transition to complete so state is consistent (may be state waiting on our events)
-				executing.then(() => execute(show))
+				execute(show)
 			},
 			destroy() {
 				// if we're a child and being removed, notify our parent and stop listening for updates

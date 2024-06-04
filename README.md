@@ -75,4 +75,4 @@ The component raises events to indicate when any transition is running:
 
 ## TailwindUI
 
-If you're converting from TailwindUI markup, you can use this [handy converter](https://green-threads.github.io/svelte-transition-converter/) to convert the comments into `<Transition>` markup and classes.
+If you're converting from TailwindUI markup, you can use this [handy converter](https://kuba1meow.github.io/svelte-transition-converter/) to convert the comments into `<Transition>` markup and classes.

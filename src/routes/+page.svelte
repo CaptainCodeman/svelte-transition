@@ -17,7 +17,7 @@
 
   $: groups = source.match(regex)?.groups
 	$: result = groups ? removeEmptyLines(`<!-- ${groups.description} -->
-<Transition {show}
+<Transition
   enter=${groups.enter}
   enterFrom=${groups.enterFrom}
   enterTo=${groups.enterTo}

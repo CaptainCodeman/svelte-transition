@@ -1,7 +1,7 @@
 {
 	"name": "svelte-transition",
 	"description": "Svelte component to transition elements via CSS classes",
-	"version": "0.0.16",
+	"version": "0.0.17",
 	"type": "module",
 	"module": "./dist/index.js",
 	"svelte": "./dist/index.js",
@@ -23,7 +23,7 @@
 		"tailwindcss",
 		"tailwindui"
 	],
-	"homepage": "https://captaincodeman.github.io/svelte-headlessui/transition/",
+	"homepage": "https://captaincodeman.github.io/svelte-transition/",
 	"repository": {
 		"type": "git",
 		"url": "https://github.com/captaincodeman/svelte-transition.git"

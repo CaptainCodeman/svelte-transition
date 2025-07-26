@@ -1,5 +1,5 @@
 <script lang="ts">
-  let source = /* html */`  <!--
+  let source = /* html */$state(`  <!--
     Modal panel, show/hide based on modal state.
 
     Entering: "ease-out duration-300"
@@ -8,15 +8,15 @@
     Leaving: "ease-in duration-200"
       From: "opacity-100 translate-y-0 sm:scale-100"
       To: "opacity-0 translate-y-4 sm:translate-y-0 sm:scale-95"
-  -->`;
-  const regex = /\<!--\s+(?<description>.*)\s+Entering:\s?(?<enter>.*)\s+From:\s?(?<enterFrom>.*)\s+To:\s?(?<enterTo>.*)\s+Leaving:\s?(?<leave>.*)\s+From:\s?(?<leaveFrom>.*)\s+To:\s?(?<leaveTo>.*)\s+--\>/mi;
+  -->`);
+  const regex = /\<!--\s+(?<description>.*)\s+Entering:\s?(?<enter>.*)\s+From:\s?(?<enterFrom>.*)\s+To:\s?(?<enterTo>.*)\s+Leaving:\s?(?<leave>.*)\s+From:\s?(?<leaveFrom>.*)\s+To:\s?(?<leaveTo>.*)\s+-->/mi;
 
 	function removeEmptyLines(value: string) {
 		return value.split('\n').filter(line => line !== '  ').join('\n')
 	}
 
-  $: groups = source.match(regex)?.groups
-	$: result = groups ? removeEmptyLines(`<!-- ${groups.description} -->
+  let groups = $derived(source.match(regex)?.groups)
+	let result = $derived(groups ? removeEmptyLines(`<!-- ${groups.description} -->
 <Transition
   enter=${groups.enter}
   enterFrom=${groups.enterFrom}
@@ -25,7 +25,7 @@
   ${groups.leaveFrom !== groups.enterTo ? `leaveFrom=${groups.leaveFrom}` : ''}
   ${groups.leaveTo !== groups.enterFrom ? `leaveTo=${groups.leaveTo}` : ''}
 >
-</Transition>`) : ''
+</Transition>`) : '')
 
 	async function copy() {
 		await navigator.clipboard.writeText(result)

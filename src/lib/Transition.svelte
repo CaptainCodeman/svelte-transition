@@ -1,4 +1,4 @@
-<script lang="ts" context="module">
+<script lang="ts" module>
 	import type { Readable } from 'svelte/store'
 
 	// unique key for context
@@ -36,35 +36,56 @@
 	import { writable } from 'svelte/store'
 
 	// state of element (shown or hidden), if null this we are treated as a child
-	// transition and will get the state from our parent, coordinating with it
-	export let show: boolean | null = null
+	
 
-	// apply transition when element is first rendered (i.e. animate in)
-	export let appear: boolean = false
+	
 
-	// whether the element should be removed from the DOM (vs hidden)
-	export let unmount: boolean = false
+	
 
-	// classes to apply when entering (showing)
-	export let enter: string = ''
-	export let enterFrom: string = ''
-	export let enterTo: string = ''
+	
 
-	// classes toi apply when leaving (hiding)
-	export let leave: string | null = null
-	export let leaveFrom: string | null = null
-	export let leaveTo: string | null = null
+	
+	interface Props {
+		// transition and will get the state from our parent, coordinating with it
+		show?: boolean | null;
+		// apply transition when element is first rendered (i.e. animate in)
+		appear?: boolean;
+		// whether the element should be removed from the DOM (vs hidden)
+		unmount?: boolean;
+		// classes to apply when entering (showing)
+		enter?: string;
+		enterFrom?: string;
+		enterTo?: string;
+		// classes toi apply when leaving (hiding)
+		leave?: string | null;
+		leaveFrom?: string | null;
+		leaveTo?: string | null;
+		children?: import('svelte').Snippet;
+	}
+
+	let {
+		show = null,
+		appear = false,
+		unmount = false,
+		enter = '',
+		enterFrom = '',
+		enterTo = '',
+		leave = null,
+		leaveFrom = null,
+		leaveTo = null,
+		children
+	}: Props = $props();
 
 	// convert class strings to arrays, for easier use with DOM elements
-	$: enterClasses = classes(enter)
-	$: enterFromClasses = classes(enterFrom)
-	$: enterToClasses = classes(enterTo)
+	let enterClasses = $derived(classes(enter))
+	let enterFromClasses = $derived(classes(enterFrom))
+	let enterToClasses = $derived(classes(enterTo))
 
 	// if leave, leaveFrom, or leaveTo are not specified then use enter values
 	// as a convenient way to avoid repeating definitions (but reverse To & From)
-	$: leaveClasses = classes(leave === null ? enter : leave)
-	$: leaveFromClasses = classes(leaveFrom === null ? enterTo : leaveFrom)
-	$: leaveToClasses = classes(leaveTo === null ? enterFrom : leaveTo)
+	let leaveClasses = $derived(classes(leave === null ? enter : leave))
+	let leaveFromClasses = $derived(classes(leaveFrom === null ? enterTo : leaveFrom))
+	let leaveToClasses = $derived(classes(leaveTo === null ? enterFrom : leaveTo))
 
 	// get parent context if we're a child
 	const parent = show === null ? getContext<Context>(key) : null
@@ -84,8 +105,8 @@
 	setContext(key, context)
 
 	// set initial state
-	let display = show && !context.appear ? 'contents' : 'none'
-	let mounted = !unmount || show === true
+	let display = $state(show && !context.appear ? 'contents' : 'none')
+	let mounted = $state(!unmount || show === true)
 
 	const dispatch = createEventDispatcher()
 
@@ -254,4 +275,4 @@
 	}
 </script>
 
-<div style:display use:transition={show}>{#if mounted}<slot />{/if}</div>
+<div style:display use:transition={show}>{#if mounted}{@render children?.()}{/if}</div>

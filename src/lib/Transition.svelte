@@ -24,7 +24,7 @@
 		return classes ? classes.split(' ').filter(x => x) : []
 	}
 
-	// to wait until css changes have been appplied we use a double rAF
+	// to wait until css changes have been applied we use a double rAF
 	function nextFrame() {
 		const raf = requestAnimationFrame // help minification
 		return new Promise(resolve => raf(() => raf(resolve)))
@@ -36,15 +36,7 @@
 	import { writable } from 'svelte/store'
 
 	// state of element (shown or hidden), if null this we are treated as a child
-	
 
-	
-
-	
-
-	
-
-	
 	interface Props {
 		// transition and will get the state from our parent, coordinating with it
 		show?: boolean | null;

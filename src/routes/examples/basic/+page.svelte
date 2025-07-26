@@ -1,7 +1,7 @@
 <script lang="ts">
 	import Transition from '$lib/Transition.svelte'
 
-	let show = true
+	let show = $state(true)
 
 	function resetIsShowing() {
 		show = false
@@ -25,7 +25,7 @@
 		</Transition>
 	</div>
 	<button
-		on:click={resetIsShowing}
+		onclick={resetIsShowing}
 		disabled={!show}
 		class="flex items-center px-3 py-2 mt-8 text-sm font-medium text-white transition transform bg-black rounded-full active:bg-opacity-40 hover:scale-105 hover:bg-opacity-30 focus:outline-none bg-opacity-20"
 	>

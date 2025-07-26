@@ -1,7 +1,7 @@
 <script lang="ts">
 	import Transition from '$lib'
 
-	let show = false
+	let show = $state(false)
 </script>
 
 <div class="flex flex-col w-full h-full items-center justify-center bg-gradient-to-r from-sky-400 to-indigo-500">
@@ -9,7 +9,7 @@
 		<button
 			type="button"
 			class="rounded-md bg-black bg-opacity-20 px-4 py-2 text-sm font-medium text-white hover:bg-opacity-30 focus:outline-none focus-visible:ring-2 focus-visible:ring-white focus-visible:ring-opacity-75"
-			on:click={() => show = true}>Open dialog</button
+			onclick={() => show = true}>Open dialog</button
 		>
 	</div>
 
@@ -23,7 +23,7 @@
 				leaveFrom="opacity-100"
 				leaveTo="opacity-0"
 			>
-				<button class="fixed inset-0 bg-black bg-opacity-25" on:click={() => show = false}></button>
+				<button class="fixed inset-0 bg-black bg-opacity-25" onclick={() => show = false}></button>
 			</Transition>
 
 			<div class="fixed inset-0 overflow-y-auto">
@@ -50,7 +50,7 @@
 								<button
 									type="button"
 									class="inline-flex justify-center rounded-md border border-transparent bg-blue-100 px-4 py-2 text-sm font-medium text-blue-900 hover:bg-blue-200 focus:outline-none focus-visible:ring-2 focus-visible:ring-blue-500 focus-visible:ring-offset-2"
-									on:click={() => show = false}
+									onclick={() => show = false}
 								>
 									Got it, thanks!
 								</button>

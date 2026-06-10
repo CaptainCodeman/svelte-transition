@@ -1,64 +1,65 @@
 {
-	"name": "svelte-transition",
-	"description": "Svelte component to transition elements via CSS classes",
-	"version": "0.0.17",
-	"type": "module",
-	"module": "./dist/index.js",
-	"svelte": "./dist/index.js",
-	"types": "./dist/index.d.ts",
-	"exports": {
-		".": {
-			"types": "./dist/index.d.ts",
-			"svelte": "./dist/index.js"
-		}
-	},
-	"files": [
-		"dist"
-	],
-	"keywords": [
-		"svelte",
-		"component",
-		"transition",
-		"animation",
-		"tailwindcss",
-		"tailwindui"
-	],
-	"homepage": "https://captaincodeman.github.io/svelte-transition/",
-	"repository": {
-		"type": "git",
-		"url": "https://github.com/captaincodeman/svelte-transition.git"
-	},
-	"author": {
-		"name": "Simon Green",
-		"email": "simon@captaincodeman.com",
-		"url": "https://www.captaincodeman.com/"
-	},
-	"scripts": {
-		"dev": "vite dev",
-		"build": "vite build",
-		"preview": "vite preview",
-		"package": "svelte-kit sync && svelte-package && publint",
-		"prepublishOnly": "npm run package",
-		"check": "svelte-check --tsconfig ./tsconfig.json",
-		"check:watch": "svelte-check --tsconfig ./tsconfig.json --watch"
-	},
-	"devDependencies": {
-		"@sveltejs/adapter-static": "^3.0.2",
-		"@sveltejs/kit": "^2.5.7",
-		"@sveltejs/package": "^2.3.1",
-		"@sveltejs/vite-plugin-svelte": "^3.1.0",
-		"@tailwindcss/forms": "^0.5.7",
-		"autoprefixer": "^10.4.19",
-		"postcss": "^8.4.38",
-		"publint": "^0.2.7",
-		"svelte": "^4.2.15",
-		"svelte-check": "^3.7.1",
-		"tailwindcss": "^3.4.3",
-		"tslib": "^2.6.2",
-		"typescript": "^5.4.5",
-		"vite": "^5.2.11"
-	},
-	"peerDependencies": {
-		"svelte": "^3.59.1 || ^4.0.0 || ^5.0.0"
-	}
+  "name": "svelte-transition",
+  "description": "Svelte component to transition elements via CSS classes",
+  "version": "0.0.17",
+  "type": "module",
+  "module": "./dist/index.js",
+  "svelte": "./dist/index.js",
+  "types": "./dist/index.d.ts",
+  "exports": {
+    ".": {
+      "types": "./dist/index.d.ts",
+      "svelte": "./dist/index.js"
+    }
+  },
+  "files": [
+    "dist"
+  ],
+  "keywords": [
+    "svelte",
+    "component",
+    "transition",
+    "animation",
+    "tailwindcss",
+    "tailwindui"
+  ],
+  "homepage": "https://captaincodeman.github.io/svelte-transition/",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/captaincodeman/svelte-transition.git"
+  },
+  "author": {
+    "name": "Simon Green",
+    "email": "simon@captaincodeman.com",
+    "url": "https://www.captaincodeman.com/"
+  },
+  "scripts": {
+    "dev": "vite dev",
+    "build": "vite build",
+    "preview": "vite preview",
+    "package": "svelte-kit sync && svelte-package && publint",
+    "prepublishOnly": "npm run package",
+    "check": "svelte-check --tsconfig ./tsconfig.json",
+    "check:watch": "svelte-check --tsconfig ./tsconfig.json --watch"
+  },
+  "devDependencies": {
+    "@sveltejs/adapter-static": "^3.0.2",
+    "@sveltejs/kit": "^2.5.7",
+    "@sveltejs/package": "^2.3.1",
+    "@sveltejs/vite-plugin-svelte": "^3.1.0",
+    "@tailwindcss/forms": "^0.5.7",
+    "autoprefixer": "^10.4.19",
+    "postcss": "^8.4.38",
+    "publint": "^0.2.7",
+    "svelte": "^4.2.15",
+    "svelte-check": "^3.7.1",
+    "tailwindcss": "^3.4.3",
+    "tslib": "^2.6.2",
+    "typescript": "^5.4.5",
+    "vite": "^5.2.11"
+  },
+  "peerDependencies": {
+    "svelte": "^3.59.1 || ^4.0.0 || ^5.0.0"
+  },
+  "license": "MIT"
 }
